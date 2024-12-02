@@ -99,9 +99,25 @@ public class LoanInstallmentService implements ILoanInstallmentService {
 
         LoanInstallment loanInstallment = loanInstallments.get(0);
 
-        List<LoanInstallment> toSaved = loanInstallment.payInstallment(loanPaymentDTO.getAmountToPay(), LocalDateTime.now(), new ArrayList<>());
+        List<LoanInstallment> processed = loanInstallment.payInstallment(loanPaymentDTO.getAmountToPay(), LocalDateTime.now(), new ArrayList<>());
 
-        wholePaidAmount = wholePaidAmount.add(toSaved.stream().map(LoanInstallment::getPaidAmount).reduce(BigDecimal.ZERO, BigDecimal::add));
+        List<LoanInstallment> toSaved = new ArrayList<>();
+        LoanInstallment start = processed.get(0);
+        toSaved.add(start);
+        if (processed.size() > 1) {
+            LoanInstallment toSave;
+            for (int i = 1; i < processed.size(); i++) {
+                if (loanInstallments.get(i).getDueDate().equals(start.getDueDate().plusMonths(i))) {
+                    toSave = loanInstallments.get(i);
+                    toSave.setPaid(true);
+                    toSave.setPaidAmount(toSave.getAmount());
+                    toSave.setPaymentDate(LocalDateTime.now());
+                    toSaved.add(toSave);
+                }
+            }
+        }
+
+        wholePaidAmount = wholePaidAmount.add(processed.stream().map(LoanInstallment::getPaidAmount).reduce(BigDecimal.ZERO, BigDecimal::add));
         user.setUsedCreditLimit(user.getUsedCreditLimit().add(wholePaidAmount));
 
         try {
@@ -109,7 +125,7 @@ public class LoanInstallmentService implements ILoanInstallmentService {
             repository.saveAll(toSaved);
             loanPaymentResultDTO.setLoanId(loanPaymentDTO.getLoanId());
             loanPaymentResultDTO.setTotalAmountPaid(wholePaidAmount);
-            loanPaymentResultDTO.setPaidLoanInstallmentCount(toSaved.size());
+            loanPaymentResultDTO.setPaidLoanInstallmentCount(processed.size());
             return new ResponseEntity<>(loanPaymentResultDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new CreditBusinessRuleException(e.getMessage());

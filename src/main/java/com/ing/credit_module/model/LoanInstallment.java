@@ -15,8 +15,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+
 import static com.ing.credit_module.constants.TableConstants.LOAN_INSTALLMENT;
 
 @Getter
