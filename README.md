@@ -13,7 +13,7 @@ The following was discovered as part of building this project:
 Below are the endpoints provided by the application's controllers:
 
 - **GET /api/users**: Retrieves all users.
-- **POST /api/users**: Creates a new user.
+- **POST /auth/sign-up**: Creates a new user.
   example DTO:
   {
   "name": "ali",
