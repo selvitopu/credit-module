@@ -12,7 +12,13 @@ The following was discovered as part of building this project:
 
 Below are the endpoints provided by the application's controllers:
 
-- **GET /api/users**: Retrieves all users.
+- **GET /users**: Retrieves all users.
+- **POST /auth/login**: Get token for existing user.
+  example DTO:
+   {
+  "username": "aveli",
+  "password": "12345"
+    }
 - **POST /auth/sign-up**: Creates a new user.
   example DTO:
   {
@@ -23,17 +29,20 @@ Below are the endpoints provided by the application's controllers:
   "confirmPassword": "12345",
   "creditLimit": "50000"
   }
-- **GET /api/users/{id}**: Retrieves the user with the specified ID.
-- **PUT /api/users/{id}**: Updates the user with the specified ID.
+- **GET /users/{id}**: Retrieves the user with the specified ID.
+- **PUT /users/{id}**: Updates the user with the specified ID. 
 - **DELETE /api/users/{id}**: Deletes the user with the specified ID.
 
 #### Loan Endpoints
 
-- **POST /api/loans**: Creates a new loan.
-- **GET /api/loans**: Retrieves all loans.
-- **GET /api/loans/{id}**: Retrieves the loan with the specified ID.
-- **PUT /api/loans/{id}**: Updates the loan with the specified ID.
-- **DELETE /api/loans/{id}**: Deletes the loan with the specified ID.
+- **POST /loans**: Creates a new loan.
+- **GET /loans**: Retrieves all loans.
+- **DELETE /loans/{id}**: Deletes the loan with the specified ID.
+#### Loan Installment Endpoints
+
+- **POST /loaninstallments**: pay loan installment.
+- **GET /loaninstallments**: Retrieves all loaninstallments by loanid.
+- **GET /loaninstallments/pageable**: Get pageable response by isPaid, dueDate and loanId.
 
 ### Reference Documentation
 
